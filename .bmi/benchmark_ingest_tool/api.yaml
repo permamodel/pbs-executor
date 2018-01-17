@@ -1,6 +1,6 @@
 name: BenchmarkIngestTool
 language: python
 
-package: permafrost_benchmark_system.bmi_ingest
+package: pbs_executor.bmi_ingest
 class: BmiBenchmarkIngestTool
 initialize_args: ingest.yaml
