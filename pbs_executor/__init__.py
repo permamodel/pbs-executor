@@ -1,4 +1,4 @@
-"""The Permafrost Benchmark System (PBS)."""
+"""The Permafrost Benchmark System (PBS) executor."""
 import os
 
 

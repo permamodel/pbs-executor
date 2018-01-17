@@ -3,7 +3,7 @@
 import os
 import shutil
 from nose.tools import raises, assert_true, assert_equal, assert_is_none
-from permafrost_benchmark_system.bmi_ingest import BmiModelIngestTool
+from pbs_executor.bmi_ingest import BmiModelIngestTool
 from . import (ingest_file, model_file, log_file, tmp_dir,
                make_test_files)
 
