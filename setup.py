@@ -21,7 +21,6 @@ setup(name='pbs-executor',
       test_suite='nose.collector',
       tests_require=[
           'nose',
-          'numpy',
       ],
       keywords='PBS permafrost model benchmark ILAMB',
       classifiers=[
