@@ -1,2 +1,2 @@
 include LICENSE README.md
-include permafrost_benchmark_system/data/*
+include pbs_executor/data/*

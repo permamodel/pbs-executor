@@ -1,14 +1,14 @@
 from setuptools import setup, find_packages
-from permafrost_benchmark_system import __version__
+from pbs_executor import __version__
 
 
-setup(name='permafrost-benchmark-system',
+setup(name='pbs-executor',
       version=__version__,
       author='Mark Piper',
       author_email='mark.piper@colorado.edu',
       license='Apache',
-      url='http://github.com/permamodel/pbs',
-      description='The Permafrost Benchmark System',
+      url='http://github.com/permamodel/pbs-executor',
+      description='The Permafrost Benchmark System executor',
       long_description=open('README.md').read(),
       install_requires=[
           'pyyaml',
