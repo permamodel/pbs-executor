@@ -1,10 +1,10 @@
-[![Build Status](https://travis-ci.org/permamodel/pbs.svg?branch=master)](https://travis-ci.org/permamodel/pbs)
-[![Coverage Status](https://coveralls.io/repos/permamodel/pbs/badge.svg?branch=master)](https://coveralls.io/r/permamodel/pbs?branch=master)
+[![Build Status](https://travis-ci.org/permamodel/pbs-executor.svg?branch=master)](https://travis-ci.org/permamodel/pbs-executor)
+[![Coverage Status](https://coveralls.io/repos/permamodel/pbs-executor/badge.svg?branch=master)](https://coveralls.io/r/permamodel/pbs-executor?branch=master)
 
-# pbs
+# pbs-executor
 
-PBS is the **Permafrost Benchmark System**,
+Executor code for the **Permafrost Benchmark System** (PBS),
 a collaboration between researchers at
-NSIDC, WHOI, LANL, and CSDMS,
+NSIDC, NAU, LANL, and CSDMS,
 for conducting benchmarking studies
 of permafrost models.
