@@ -3,7 +3,7 @@
 import os
 import shutil
 from nose.tools import assert_true, assert_false, assert_equal
-from permafrost_benchmark_system.ingest import ModelIngestTool
+from pbs_executor.ingest import ModelIngestTool
 from . import (ingest_file, model_file, log_file, tmp_dir, link_dir,
                make_test_files)
 

@@ -1,4 +1,4 @@
-"""Unit tests for the permafrost_benchmark_system package."""
+"""Unit tests for the pbs_executor package."""
 
 import os
 import yaml

@@ -2,10 +2,9 @@
 
 import os
 from nose.tools import raises, assert_true
-from permafrost_benchmark_system.file import IngestFile
-from permafrost_benchmark_system.verify import (VerificationTool,
-                                                VerificationError)
-from permafrost_benchmark_system import data_directory
+from pbs_executor.file import IngestFile
+from pbs_executor.verify import VerificationTool, VerificationError
+from pbs_executor import data_directory
 from . import ingest_file, model_file, make_test_files
 
 
