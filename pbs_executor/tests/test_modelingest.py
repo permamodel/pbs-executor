@@ -15,7 +15,8 @@ def setup_module():
 
 def teardown_module():
     shutil.rmtree(tmp_dir)
-    shutil.rmtree(link_dir)
+    if os.path.exists(link_dir):
+        shutil.rmtree(link_dir)
     for f in [ingest_file, model_file, log_file]:
         try:
             os.remove(f)
