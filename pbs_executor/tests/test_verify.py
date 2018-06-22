@@ -5,7 +5,7 @@ from nose.tools import raises, assert_true
 from pbs_executor.file import IngestFile
 from pbs_executor.verify import VerificationTool, VerificationError
 from pbs_executor import data_directory
-from . import ingest_file, model_file, make_test_files
+from . import ingest_file, model_file, make_model_files
 
 
 file_txt = 'tropics.txt'
@@ -13,7 +13,7 @@ file_nc = 'basins_0.5x0.5.nc'
 
 
 def setup_module():
-    make_test_files()
+    make_model_files()
 
 
 def teardown_module():

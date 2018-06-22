@@ -5,11 +5,11 @@ import shutil
 from nose.tools import assert_true, assert_false, assert_equal
 from pbs_executor.ingest import ModelIngestTool
 from . import (ingest_file, model_file, log_file, tmp_dir, link_dir,
-               make_test_files)
+               make_model_files)
 
 
 def setup_module():
-    make_test_files()
+    make_model_files()
     os.mkdir(tmp_dir)
 
 
@@ -60,7 +60,7 @@ def test_verify():
 
 
 def test_move_file_new():
-    make_test_files()
+    make_model_files()
     x = ModelIngestTool()
     x.load(ingest_file)
     # x.verify()  # verify will clobber my simple test file
@@ -72,7 +72,7 @@ def test_move_file_new():
 
 
 def test_move_file_exists():
-    make_test_files()
+    make_model_files()
     x = ModelIngestTool()
     x.load(ingest_file)
     # x.verify()  # verify will clobber my simple test file
