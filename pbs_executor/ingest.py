@@ -21,9 +21,9 @@ Error message:\n
 '''
 
 
-class ModelIngestTool(object):
+class IngestTool(object):
     """
-    Tool for uploading CMIP5-compatible model outputs into PBS.
+    Toolbase for ingesting files into the PBS.
 
     Parameters
     ----------
@@ -35,11 +35,11 @@ class ModelIngestTool(object):
     ilamb_root : str
       Path to the ILAMB root directory.
     dest_dir : str
-      Directory relative to ILAMB_ROOT where model outputs are stored.
+      Directory relative to ILAMB_ROOT where ingested files are stored.
     link_dir : str, optional
-      Directory relative to ILAMB_ROOT where model outputs are linked.
+      Directory relative to ILAMB_ROOT where ingested files are linked.
     study_name : str, optional
-      Name of modeling project or study; e.g., CMIP5.
+      Name of modeling project or study; e.g., CMIP5, MsTMIP, PBS.
     ingest_files : list
       List of files to ingest.
     make_public : bool
@@ -53,9 +53,6 @@ class ModelIngestTool(object):
         self.study_name = ''
         self.ingest_files = []
         self.make_public = True
-        self.log = Logger(title='Model Ingest Tool Summary')
-        if ingest_file is not None:
-            self.load(ingest_file)
 
     def load(self, ingest_file):
         """
@@ -76,6 +73,40 @@ class ModelIngestTool(object):
         for f in cfg['ingest_files']:
             self.ingest_files.append(IngestFile(f))
         self.make_public = cfg['make_public']
+
+    def symlink(self, ingest_file):
+        """
+        Symlink a file into the PBS project directory.
+
+        Parameters
+        ----------
+        ingest_file : IngestFile
+          File for which symlink is crated.
+
+        """
+        src = os.path.join(self.ilamb_root,
+                           self.dest_dir,
+                           ingest_file.data,
+                           ingest_file.name)
+        dst_dir = os.path.join(self.ilamb_root,
+                           self.link_dir,
+                           self.study_name)
+        if not os.path.isdir(dst_dir):
+            os.makedirs(dst_dir)
+        dst = os.path.join(dst_dir, ingest_file.name)
+        os.symlink(src, dst)
+
+
+class ModelIngestTool(IngestTool):
+    """
+    Tool for adding CMIP5-compatible model outputs to the PBS.
+
+    """
+    def __init__(self, ingest_file=None):
+        super(ModelIngestTool, self).__init__(ingest_file=None)
+        self.log = Logger(title='Model Ingest Tool Summary')
+        if ingest_file is not None:
+            self.load(ingest_file)
 
     def verify(self):
         """
@@ -118,30 +149,8 @@ class ModelIngestTool(object):
                 finally:
                     self.log.add(msg)
 
-    def symlink(self, ingest_file):
-        """
-        Symlink a file into the PBS project directory.
 
-        Parameters
-        ----------
-        ingest_file : IngestFile
-          File for which symlink is crated.
-
-        """
-        src = os.path.join(self.ilamb_root,
-                           self.dest_dir,
-                           ingest_file.data,
-                           ingest_file.name)
-        dst_dir = os.path.join(self.ilamb_root,
-                           self.link_dir,
-                           self.study_name)
-        if not os.path.isdir(dst_dir):
-            os.makedirs(dst_dir)
-        dst = os.path.join(dst_dir, ingest_file.name)
-        os.symlink(src, dst)
-
-
-class BenchmarkIngestTool(object):
+class BenchmarkIngestTool(IngestTool):
 
     """Tool for uploading benchmark datasets into PBS."""
 
