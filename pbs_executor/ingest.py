@@ -98,10 +98,9 @@ class IngestTool(object):
 
 
 class ModelIngestTool(IngestTool):
-    """
-    Tool for adding CMIP5-compatible model outputs to the PBS.
 
-    """
+    """Tool for adding CMIP5-compatible model outputs to the PBS."""
+
     def __init__(self, ingest_file=None):
         super(ModelIngestTool, self).__init__(ingest_file=None)
         self.log = Logger(title='Model Ingest Tool Summary')
@@ -152,7 +151,10 @@ class ModelIngestTool(IngestTool):
 
 class BenchmarkIngestTool(IngestTool):
 
-    """Tool for uploading benchmark datasets into PBS."""
+    """Tool for adding benchmark datasets to the PBS."""
 
-    def __init__(self):
-        pass
+    def __init__(self, ingest_file=None):
+        super(BenchmarkIngestTool, self).__init__(ingest_file=None)
+        self.log = Logger(title='Benchmark Ingest Tool Summary')
+        if ingest_file is not None:
+            self.load(ingest_file)
