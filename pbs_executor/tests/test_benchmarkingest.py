@@ -39,3 +39,20 @@ def test_init_with_ingest_file():
     x = BenchmarkIngestTool(ingest_file=ingest_file)
     assert_true(isinstance(x, BenchmarkIngestTool))
     assert_equal(x.ingest_files[0].name, benchmark_file)
+
+
+def test_logger():
+    x = BenchmarkIngestTool()
+    assert_true(os.path.isfile(log_file))
+
+
+def test_set_dest_dir():
+    x = BenchmarkIngestTool()
+    x.dest_dir = tmp_dir
+    assert_equal(x.dest_dir, tmp_dir)
+
+
+def test_set_link_dir():
+    x = BenchmarkIngestTool()
+    x.link_dir = link_dir
+    assert_equal(x.link_dir, link_dir)
