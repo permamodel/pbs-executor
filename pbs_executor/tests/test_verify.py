@@ -1,7 +1,7 @@
 """Tests for the verify module, aka the PBS Verification Tool (VerT)."""
 
 import os
-from nose.tools import raises, assert_true
+from nose.tools import raises, assert_true, assert_equal
 from pbs_executor.file import IngestFile
 from pbs_executor.verify import (VerificationTool, VerificationError,
                                  ModelVerificationTool)
@@ -68,6 +68,22 @@ def test_parse_filename():
     v = VerificationTool(ingest_file)
     v.parse_filename()
     assert_true(len(v.parts) > 0)
+
+
+def test_parse_filename_nc():
+    f = os.path.join(data_directory, file_nc)
+    ingest_file = IngestFile(f)
+    v = VerificationTool(ingest_file)
+    v.parse_filename()
+    assert_equal(v.parts[-1], '.nc')
+
+
+def test_parse_filename_txt():
+    f = os.path.join(data_directory, file_txt)
+    ingest_file = IngestFile(f)
+    v = VerificationTool(ingest_file)
+    v.parse_filename()
+    assert_equal(v.parts[-1], '.txt')
 
 
 @raises(VerificationError)

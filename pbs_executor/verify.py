@@ -1,5 +1,6 @@
 """Verify that ingest files follow the CMIP5 standard format."""
 
+import os
 from netCDF4 import Dataset
 
 
@@ -64,7 +65,9 @@ class VerificationTool(object):
         Break a filename into its component parts.
 
         """
-        self.parts = self.file.name.split('_')
+        base, ext = os.path.splitext(self.file.name)
+        self.parts = base.split('_')
+        self.parts.append(ext)
 
     def verify(self):
         """
