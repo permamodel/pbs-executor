@@ -1,0 +1,6 @@
+ilamb_root: /home/csdms/ilamb
+dest_dir: DATA
+link_dir: DATA-by-project
+study_name: PBS
+ingest_files: ['nep.nc']
+make_public: True
