@@ -11,6 +11,7 @@ from . import ingest_file, model_file, make_model_files
 
 file_txt = 'tropics.txt'
 file_nc = 'basins_0.5x0.5.nc'
+file_model = 'sftlf_fx_PBS-test_historical_r9i0p0.nc'
 
 
 def setup_module():
@@ -46,19 +47,35 @@ def test_init_model():
     assert_true(isinstance(x, ModelVerificationTool))
 
 
-@raises(VerificationError)
 def test_is_netcdf():
-    f = os.path.join(data_directory, file_txt)
+    f = os.path.join(data_directory, file_nc)
     ingest_file = IngestFile(f)
     v = VerificationTool(ingest_file)
     v.is_netcdf()
 
 
 @raises(VerificationError)
+def test_is_not_netcdf():
+    f = os.path.join(data_directory, file_txt)
+    ingest_file = IngestFile(f)
+    v = VerificationTool(ingest_file)
+    v.is_netcdf()
+
+
 def test_is_netcdf3_data_model():
+    f = os.path.join(data_directory, file_model)
+    ingest_file = IngestFile(f)
+    v = ModelVerificationTool(ingest_file)
+    v.is_netcdf()
+    v.is_netcdf3_data_model()
+
+
+@raises(VerificationError)
+def test_is_not_netcdf3_data_model():
     f = os.path.join(data_directory, file_nc)
     ingest_file = IngestFile(f)
     v = ModelVerificationTool(ingest_file)
+    v.is_netcdf()
     v.is_netcdf3_data_model()
 
 
@@ -94,9 +111,16 @@ def test_filename_has_model_name():
     v.filename_has_model_name()
 
 
-@raises(VerificationError)
-def test_verify():
-    f = os.path.join(data_directory, file_txt)
+def test_verify_model():
+    f = os.path.join(data_directory, file_model)
     ingest_file = IngestFile(f)
-    v = VerificationTool(ingest_file)
+    v = ModelVerificationTool(ingest_file)
+    v.verify()
+
+
+@raises(VerificationError)
+def test_not_verify_model():
+    f = os.path.join(data_directory, file_nc)
+    ingest_file = IngestFile(f)
+    v = ModelVerificationTool(ingest_file)
     v.verify()
