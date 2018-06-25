@@ -158,3 +158,38 @@ class ModelVerificationTool(VerificationTool):
         super(ModelVerificationTool, self).verify()
         self.is_netcdf3_data_model()
         self.filename_has_model_name()
+
+
+class BenchmarkVerificationTool(VerificationTool):
+    """
+    Tool for verifying that benchmark data files are ILAMB-compatible.
+
+    Parameters
+    ----------
+    file : str
+      The name of a file to verify.
+
+    Attributes
+    ----------
+    file : str
+      The name of a file to verify.
+    parts : list
+      Parts of the filename (see Notes below).
+    variable_name : str or None
+      CMIP5 short variable name.
+
+    Notes
+    -----
+    ILAMB benchmark data file names can take two forms:
+
+        filename = <variable name>.nc
+        filename = <variable name>_<lon-resolution>_<lat-resolution>.nc
+
+    The first is for point data, the second for gridded data.
+
+    Examples:
+
+        swe.nc
+        tas_0.5x0.5.nc
+
+    """

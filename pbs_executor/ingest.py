@@ -4,7 +4,8 @@ import os
 import shutil
 import yaml
 from .file import IngestFile, Logger
-from .verify import ModelVerificationTool, VerificationError
+from .verify import (ModelVerificationTool, BenchmarkVerificationTool,
+                     VerificationError)
 
 
 file_exists = '''## File Exists\n
@@ -159,3 +160,21 @@ class BenchmarkIngestTool(IngestTool):
         self.log = Logger(title='Benchmark Ingest Tool Summary')
         if ingest_file is not None:
             self.load(ingest_file)
+
+    def verify(self):
+        """
+        Check whether ingest files use an ILAMB-compatible format.
+
+        """
+        for f in self.ingest_files:
+            v = BenchmarkVerificationTool(f)
+            try:
+                v.verify()
+            except VerificationError as e:
+                msg = file_not_verified.format(f.name, e.msg)
+                self.log.add(msg)
+                if os.path.exists(f.name):
+                    os.remove(f.name)
+            else:
+                f.data = v.variable_name
+                f.is_verified = True

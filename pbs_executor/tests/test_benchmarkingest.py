@@ -2,7 +2,7 @@
 
 import os
 import shutil
-from nose.tools import assert_true, assert_equal
+from nose.tools import assert_true, assert_false, assert_equal
 from pbs_executor.ingest import BenchmarkIngestTool
 from . import (ingest_file, benchmark_file, log_file, tmp_dir,
                link_dir, make_benchmark_files)
@@ -56,3 +56,11 @@ def test_set_link_dir():
     x = BenchmarkIngestTool()
     x.link_dir = link_dir
     assert_equal(x.link_dir, link_dir)
+
+
+def test_verify():
+    x = BenchmarkIngestTool()
+    x.load(ingest_file)
+    x.verify()
+    assert_false(os.path.isfile(benchmark_file))
+    assert_true(os.path.isfile(log_file))

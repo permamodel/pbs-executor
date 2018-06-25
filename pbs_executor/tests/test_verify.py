@@ -4,7 +4,8 @@ import os
 from nose.tools import raises, assert_true, assert_equal
 from pbs_executor.file import IngestFile
 from pbs_executor.verify import (VerificationTool, VerificationError,
-                                 ModelVerificationTool)
+                                 ModelVerificationTool,
+                                 BenchmarkVerificationTool)
 from pbs_executor import data_directory
 from . import ingest_file, model_file, make_model_files
 
@@ -123,4 +124,19 @@ def test_not_verify_model():
     f = os.path.join(data_directory, file_nc)
     ingest_file = IngestFile(f)
     v = ModelVerificationTool(ingest_file)
+    v.verify()
+
+
+def test_verify_benchmark():
+    f = os.path.join(data_directory, file_nc)
+    ingest_file = IngestFile(f)
+    v = BenchmarkVerificationTool(ingest_file)
+    v.verify()
+
+
+@raises(VerificationError)
+def test_not_verify_benchmark():
+    f = os.path.join(data_directory, file_txt)
+    ingest_file = IngestFile(f)
+    v = BenchmarkVerificationTool(ingest_file)
     v.verify()
