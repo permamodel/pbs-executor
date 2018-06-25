@@ -4,7 +4,7 @@ import os
 import shutil
 import yaml
 from .file import IngestFile, Logger
-from .verify import VerificationTool, VerificationError
+from .verify import ModelVerificationTool, VerificationError
 
 
 file_exists = '''## File Exists\n
@@ -110,9 +110,10 @@ class ModelIngestTool(IngestTool):
     def verify(self):
         """
         Check whether ingest files use the CMIP5 standard format.
+
         """
         for f in self.ingest_files:
-            v = VerificationTool(f)
+            v = ModelVerificationTool(f)
             try:
                 v.verify()
             except VerificationError as e:

@@ -3,7 +3,8 @@
 import os
 from nose.tools import raises, assert_true
 from pbs_executor.file import IngestFile
-from pbs_executor.verify import VerificationTool, VerificationError
+from pbs_executor.verify import (VerificationTool, VerificationError,
+                                 ModelVerificationTool)
 from pbs_executor import data_directory
 from . import ingest_file, model_file, make_model_files
 
@@ -39,10 +40,10 @@ def test_init_fails_with_no_args():
     x = VerificationTool()
 
 
-def test_init():
+def test_init_model():
     f = IngestFile(model_file)
-    x = VerificationTool(f)
-    assert_true(isinstance(x, VerificationTool))
+    x = ModelVerificationTool(f)
+    assert_true(isinstance(x, ModelVerificationTool))
 
 
 @raises(VerificationError)
@@ -57,7 +58,7 @@ def test_is_netcdf():
 def test_is_netcdf3_data_model():
     f = os.path.join(data_directory, file_nc)
     ingest_file = IngestFile(f)
-    v = VerificationTool(ingest_file)
+    v = ModelVerificationTool(ingest_file)
     v.is_netcdf3_data_model()
 
 
@@ -73,13 +74,13 @@ def test_parse_filename():
 def test_filename_has_model_name():
     f = os.path.join(data_directory, file_nc)
     ingest_file = IngestFile(f)
-    v = VerificationTool(ingest_file)
+    v = ModelVerificationTool(ingest_file)
     v.filename_has_model_name()
 
 
 @raises(VerificationError)
 def test_verify():
-    f = os.path.join(data_directory, file_nc)
+    f = os.path.join(data_directory, file_txt)
     ingest_file = IngestFile(f)
     v = VerificationTool(ingest_file)
     v.verify()

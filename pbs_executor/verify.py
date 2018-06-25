@@ -27,7 +27,59 @@ class VerificationError(Exception):
 
 class VerificationTool(object):
     """
-    Tool for verifying that files are CMIP5-compatible.
+    Tool for verifying that files are ILAMB-compatible.
+
+    Parameters
+    ----------
+    file : str
+      The name of a file to verify.
+
+    Attributes
+    ----------
+    file : str
+      The name of a file to verify.
+    parts : list
+      Parts of the filename (see Notes below).
+    variable_name : str or None
+      CMIP5 short variable name.
+
+    """
+    def __init__(self, file):
+        self.file = file
+        self.parts = []
+        self.variable_name = None
+
+    def is_netcdf(self):
+        """
+        Check whether a file is netCDF.
+
+        """
+        try:
+            Dataset(self.file.name)
+        except IOError as e:
+            raise VerificationError(e.message)
+
+    def parse_filename(self):
+        """
+        Break a filename into its component parts.
+
+        """
+        self.parts = self.file.name.split('_')
+
+    def verify(self):
+        """
+        Run all checks.
+
+        A file that passes all checks is verified.
+
+        """
+        self.is_netcdf()
+        self.parse_filename()
+
+
+class ModelVerificationTool(VerificationTool):
+    """
+    Tool for verifying that model output files are CMIP5-compatible.
 
     Parameters
     ----------
@@ -65,24 +117,12 @@ class VerificationTool(object):
 
     """
     def __init__(self, file):
-        self.file = file
-        self.parts = []
-        self.variable_name = None
+        super(ModelVerificationTool, self).__init__(file)
         self.mip_table = None
         self.model_name = None
         self.experiment = None
         self.ensemble_member = None
         self.temporal_subset = None
-
-    def is_netcdf(self):
-        """
-        Check whether a file is netCDF.
-
-        """
-        try:
-            Dataset(self.file.name)
-        except IOError as e:
-            raise VerificationError(e.message)
 
     def is_netcdf3_data_model(self):
         """
@@ -93,13 +133,6 @@ class VerificationTool(object):
         if not d.data_model in ['NETCDF3_CLASSIC', 'NETCDF4_CLASSIC']:
             msg = 'NetCDF: File must use classic data model'
             raise VerificationError(msg)
-
-    def parse_filename(self):
-        """
-        Break a filename into its component parts.
-
-        """
-        self.parts = self.file.name.split('_')
 
     def filename_has_model_name(self):
         """
@@ -119,7 +152,6 @@ class VerificationTool(object):
         A file that passes all checks is verified.
 
         """
-        self.is_netcdf()
+        super(ModelVerificationTool, self).verify()
         self.is_netcdf3_data_model()
-        self.parse_filename()
         self.filename_has_model_name()
