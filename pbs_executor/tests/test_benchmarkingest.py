@@ -64,3 +64,41 @@ def test_verify():
     x.verify()
     assert_false(os.path.isfile(benchmark_file))
     assert_true(os.path.isfile(log_file))
+
+
+def test_move_file_new():
+    make_benchmark_files()
+    x = BenchmarkIngestTool()
+    x.load(ingest_file)
+    # x.verify()  # verify will clobber my simple test file
+    f = x.ingest_files[0]
+    f.is_verified = True
+    f.data = 'foo'
+    x.move()
+    assert_true(os.path.isfile(os.path.join(tmp_dir,
+                                            f.data,
+                                            x.study_name,
+                                            f.name)))
+    assert_true(os.path.islink(os.path.join(link_dir,
+                                            x.study_name,
+                                            f.name)))
+    assert_true(os.path.isfile(log_file))
+
+
+def test_move_file_exists():
+    make_benchmark_files()
+    x = BenchmarkIngestTool()
+    x.load(ingest_file)
+    # x.verify()  # verify will clobber my simple test file
+    f = x.ingest_files[0]
+    f.is_verified = True
+    f.data = 'foo'
+    x.move()
+    assert_true(os.path.isfile(os.path.join(tmp_dir,
+                                            f.data,
+                                            x.study_name,
+                                            f.name)))
+    assert_true(os.path.islink(os.path.join(link_dir,
+                                            x.study_name,
+                                            f.name)))
+    assert_true(os.path.isfile(log_file))

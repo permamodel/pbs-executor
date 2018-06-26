@@ -193,3 +193,5 @@ class BenchmarkVerificationTool(VerificationTool):
         tas_0.5x0.5.nc
 
     """
+    def __init__(self, file):
+        super(BenchmarkVerificationTool, self).__init__(file)

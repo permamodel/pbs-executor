@@ -75,7 +75,7 @@ class IngestTool(object):
             self.ingest_files.append(IngestFile(f))
         self.make_public = cfg['make_public']
 
-    def symlink(self, ingest_file):
+    def symlink(self, ingest_file, use_study_name=False):
         """
         Symlink a file into the PBS project directory.
 
@@ -85,13 +85,13 @@ class IngestTool(object):
           File for which symlink is crated.
 
         """
-        src = os.path.join(self.ilamb_root,
-                           self.dest_dir,
-                           ingest_file.data,
-                           ingest_file.name)
-        dst_dir = os.path.join(self.ilamb_root,
-                           self.link_dir,
-                           self.study_name)
+        src = os.path.join(self.ilamb_root, self.dest_dir,
+                           ingest_file.data)
+        if use_study_name:
+            src = os.path.join(src, self.study_name)
+        src = os.path.join(src, ingest_file.name)
+        dst_dir = os.path.join(self.ilamb_root, self.link_dir,
+                               self.study_name)
         if not os.path.isdir(dst_dir):
             os.makedirs(dst_dir)
         dst = os.path.join(dst_dir, ingest_file.name)
@@ -178,3 +178,27 @@ class BenchmarkIngestTool(IngestTool):
             else:
                 f.data = v.variable_name
                 f.is_verified = True
+
+    def move(self):
+        """
+        Move ingest files to the ILAMB DATA directory.
+
+        """
+        data_dir = os.path.join(self.ilamb_root, self.dest_dir)
+        for f in self.ingest_files:
+            if f.is_verified:
+                target_dir = os.path.join(data_dir, f.data, self.study_name)
+                if not os.path.isdir(target_dir):
+                    os.makedirs(target_dir, mode=0775)
+                msg = file_moved.format(f.name, target_dir)
+                try:
+                    shutil.move(f.name, target_dir)
+                except shutil.Error:
+                    msg = file_exists.format(f.name, target_dir)
+                    if os.path.exists(f.name):
+                        os.remove(f.name)
+                else:
+                    if len(self.link_dir) > 0:
+                        self.symlink(f, use_study_name=True)
+                finally:
+                    self.log.add(msg)
