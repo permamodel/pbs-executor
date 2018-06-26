@@ -65,10 +65,11 @@ def test_move_file_new():
     x = ModelIngestTool()
     x.load(ingest_file)
     # x.verify()  # verify will clobber my simple test file
-    x.ingest_files[0].is_verified = True
-    x.ingest_files[0].data = 'foo'
+    f = x.ingest_files[0]
+    f.is_verified = True
+    f.data = 'foo'
     x.move()
-    assert_true(os.path.isfile(os.path.join(tmp_dir, 'foo', model_file)))
+    assert_true(os.path.isfile(os.path.join(tmp_dir, f.data, f.name)))
     assert_true(os.path.isfile(log_file))
 
 
@@ -77,8 +78,9 @@ def test_move_file_exists():
     x = ModelIngestTool()
     x.load(ingest_file)
     # x.verify()  # verify will clobber my simple test file
-    x.ingest_files[0].is_verified = True
-    x.ingest_files[0].data = 'foo'
+    f = x.ingest_files[0]
+    f.is_verified = True
+    f.data = 'foo'
     x.move()
-    assert_true(os.path.isfile(os.path.join(tmp_dir, 'foo', model_file)))
+    assert_true(os.path.isfile(os.path.join(tmp_dir, f.data, f.name)))
     assert_true(os.path.isfile(log_file))
