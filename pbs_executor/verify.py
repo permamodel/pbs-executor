@@ -69,6 +69,17 @@ class VerificationTool(object):
         self.parts = base.split('_')
         self.parts.append(ext)
 
+    def filename_has_variable_name(self):
+        """
+        Check that the filename includes a variable name.
+
+        """
+        try:
+            self.variable_name = self.parts[0]
+        except IndexError:
+            msg = 'Variable name not found'
+            raise VerificationError(msg)
+
     def verify(self):
         """
         Run all checks.
@@ -78,6 +89,7 @@ class VerificationTool(object):
         """
         self.is_netcdf()
         self.parse_filename()
+        self.filename_has_variable_name()
 
 
 class ModelVerificationTool(VerificationTool):
