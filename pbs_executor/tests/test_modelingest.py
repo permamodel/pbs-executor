@@ -5,17 +5,18 @@ import shutil
 from nose.tools import assert_true, assert_false, assert_equal
 from pbs_executor.ingest import ModelIngestTool
 from . import (ingest_file, model_file, log_file, tmp_dir, link_dir,
-               make_test_files)
+               make_model_files)
 
 
 def setup_module():
-    make_test_files()
+    make_model_files()
     os.mkdir(tmp_dir)
 
 
 def teardown_module():
     shutil.rmtree(tmp_dir)
-    shutil.rmtree(link_dir)
+    if os.path.exists(link_dir):
+        shutil.rmtree(link_dir)
     for f in [ingest_file, model_file, log_file]:
         try:
             os.remove(f)
@@ -60,24 +61,26 @@ def test_verify():
 
 
 def test_move_file_new():
-    make_test_files()
+    make_model_files()
     x = ModelIngestTool()
     x.load(ingest_file)
     # x.verify()  # verify will clobber my simple test file
-    x.ingest_files[0].is_verified = True
-    x.ingest_files[0].data = 'foo'
+    f = x.ingest_files[0]
+    f.is_verified = True
+    f.data = 'foo'
     x.move()
-    assert_true(os.path.isfile(os.path.join(tmp_dir, 'foo', model_file)))
+    assert_true(os.path.isfile(os.path.join(tmp_dir, f.data, f.name)))
     assert_true(os.path.isfile(log_file))
 
 
 def test_move_file_exists():
-    make_test_files()
+    make_model_files()
     x = ModelIngestTool()
     x.load(ingest_file)
     # x.verify()  # verify will clobber my simple test file
-    x.ingest_files[0].is_verified = True
-    x.ingest_files[0].data = 'foo'
+    f = x.ingest_files[0]
+    f.is_verified = True
+    f.data = 'foo'
     x.move()
-    assert_true(os.path.isfile(os.path.join(tmp_dir, 'foo', model_file)))
+    assert_true(os.path.isfile(os.path.join(tmp_dir, f.data, f.name)))
     assert_true(os.path.isfile(log_file))

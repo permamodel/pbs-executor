@@ -4,7 +4,8 @@ import os
 import shutil
 import yaml
 from .file import IngestFile, Logger
-from .verify import VerificationTool, VerificationError
+from .verify import (ModelVerificationTool, BenchmarkVerificationTool,
+                     VerificationError)
 
 
 file_exists = '''## File Exists\n
@@ -21,9 +22,9 @@ Error message:\n
 '''
 
 
-class ModelIngestTool(object):
+class IngestTool(object):
     """
-    Tool for uploading CMIP5-compatible model outputs into PBS.
+    Toolbase for ingesting files into the PBS.
 
     Parameters
     ----------
@@ -35,11 +36,11 @@ class ModelIngestTool(object):
     ilamb_root : str
       Path to the ILAMB root directory.
     dest_dir : str
-      Directory relative to ILAMB_ROOT where model outputs are stored.
+      Directory relative to ILAMB_ROOT where ingested files are stored.
     link_dir : str, optional
-      Directory relative to ILAMB_ROOT where model outputs are linked.
+      Directory relative to ILAMB_ROOT where ingested files are linked.
     study_name : str, optional
-      Name of modeling project or study; e.g., CMIP5.
+      Name of modeling project or study; e.g., CMIP5, MsTMIP, PBS.
     ingest_files : list
       List of files to ingest.
     make_public : bool
@@ -53,9 +54,6 @@ class ModelIngestTool(object):
         self.study_name = ''
         self.ingest_files = []
         self.make_public = True
-        self.log = Logger(title='Model Ingest Tool Summary')
-        if ingest_file is not None:
-            self.load(ingest_file)
 
     def load(self, ingest_file):
         """
@@ -77,12 +75,46 @@ class ModelIngestTool(object):
             self.ingest_files.append(IngestFile(f))
         self.make_public = cfg['make_public']
 
+    def symlink(self, ingest_file, use_study_name=False):
+        """
+        Symlink a file into the PBS project directory.
+
+        Parameters
+        ----------
+        ingest_file : IngestFile
+          File for which symlink is crated.
+
+        """
+        src = os.path.join(self.ilamb_root, self.dest_dir,
+                           ingest_file.data)
+        if use_study_name:
+            src = os.path.join(src, self.study_name)
+        src = os.path.join(src, ingest_file.name)
+        dst_dir = os.path.join(self.ilamb_root, self.link_dir,
+                               self.study_name)
+        if not os.path.isdir(dst_dir):
+            os.makedirs(dst_dir)
+        dst = os.path.join(dst_dir, ingest_file.name)
+        os.symlink(src, dst)
+
+
+class ModelIngestTool(IngestTool):
+
+    """Tool for adding CMIP5-compatible model outputs to the PBS."""
+
+    def __init__(self, ingest_file=None):
+        super(ModelIngestTool, self).__init__(ingest_file=None)
+        self.log = Logger(title='Model Ingest Tool Summary')
+        if ingest_file is not None:
+            self.load(ingest_file)
+
     def verify(self):
         """
         Check whether ingest files use the CMIP5 standard format.
+
         """
         for f in self.ingest_files:
-            v = VerificationTool(f)
+            v = ModelVerificationTool(f)
             try:
                 v.verify()
             except VerificationError as e:
@@ -118,32 +150,55 @@ class ModelIngestTool(object):
                 finally:
                     self.log.add(msg)
 
-    def symlink(self, ingest_file):
+
+class BenchmarkIngestTool(IngestTool):
+
+    """Tool for adding benchmark datasets to the PBS."""
+
+    def __init__(self, ingest_file=None):
+        super(BenchmarkIngestTool, self).__init__(ingest_file=None)
+        self.log = Logger(title='Benchmark Ingest Tool Summary')
+        if ingest_file is not None:
+            self.load(ingest_file)
+
+    def verify(self):
         """
-        Symlink a file into the PBS project directory.
-
-        Parameters
-        ----------
-        ingest_file : IngestFile
-          File for which symlink is crated.
+        Check whether ingest files use an ILAMB-compatible format.
 
         """
-        src = os.path.join(self.ilamb_root,
-                           self.dest_dir,
-                           ingest_file.data,
-                           ingest_file.name)
-        dst_dir = os.path.join(self.ilamb_root,
-                           self.link_dir,
-                           self.study_name)
-        if not os.path.isdir(dst_dir):
-            os.makedirs(dst_dir)
-        dst = os.path.join(dst_dir, ingest_file.name)
-        os.symlink(src, dst)
+        for f in self.ingest_files:
+            v = BenchmarkVerificationTool(f)
+            try:
+                v.verify()
+            except VerificationError as e:
+                msg = file_not_verified.format(f.name, e.msg)
+                self.log.add(msg)
+                if os.path.exists(f.name):
+                    os.remove(f.name)
+            else:
+                f.data = v.variable_name
+                f.is_verified = True
 
+    def move(self):
+        """
+        Move ingest files to the ILAMB DATA directory.
 
-class BenchmarkIngestTool(object):
-
-    """Tool for uploading benchmark datasets into PBS."""
-
-    def __init__(self):
-        pass
+        """
+        data_dir = os.path.join(self.ilamb_root, self.dest_dir)
+        for f in self.ingest_files:
+            if f.is_verified:
+                target_dir = os.path.join(data_dir, f.data, self.study_name)
+                if not os.path.isdir(target_dir):
+                    os.makedirs(target_dir, mode=0775)
+                msg = file_moved.format(f.name, target_dir)
+                try:
+                    shutil.move(f.name, target_dir)
+                except shutil.Error:
+                    msg = file_exists.format(f.name, target_dir)
+                    if os.path.exists(f.name):
+                        os.remove(f.name)
+                else:
+                    if len(self.link_dir) > 0:
+                        self.symlink(f, use_study_name=True)
+                finally:
+                    self.log.add(msg)

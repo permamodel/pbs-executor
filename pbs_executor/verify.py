@@ -1,5 +1,6 @@
 """Verify that ingest files follow the CMIP5 standard format."""
 
+import os
 from netCDF4 import Dataset
 
 
@@ -27,7 +28,73 @@ class VerificationError(Exception):
 
 class VerificationTool(object):
     """
-    Tool for verifying that files are CMIP5-compatible.
+    Tool for verifying that files are ILAMB-compatible.
+
+    Parameters
+    ----------
+    file : str
+      The name of a file to verify.
+
+    Attributes
+    ----------
+    file : str
+      The name of a file to verify.
+    parts : list
+      Parts of the filename (see Notes below).
+    variable_name : str or None
+      CMIP5 short variable name.
+
+    """
+    def __init__(self, file):
+        self.file = file
+        self.parts = []
+        self.variable_name = None
+
+    def is_netcdf(self):
+        """
+        Check whether a file is netCDF.
+
+        """
+        try:
+            Dataset(self.file.name)
+        except IOError as e:
+            raise VerificationError(e.message)
+
+    def parse_filename(self):
+        """
+        Break a filename into its component parts.
+
+        """
+        base, ext = os.path.splitext(self.file.name)
+        self.parts = base.split('_')
+        self.parts.append(ext)
+
+    def filename_has_variable_name(self):
+        """
+        Check that the filename includes a variable name.
+
+        """
+        try:
+            self.variable_name = self.parts[0]
+        except IndexError:
+            msg = 'Variable name not found'
+            raise VerificationError(msg)
+
+    def verify(self):
+        """
+        Run all checks.
+
+        A file that passes all checks is verified.
+
+        """
+        self.is_netcdf()
+        self.parse_filename()
+        self.filename_has_variable_name()
+
+
+class ModelVerificationTool(VerificationTool):
+    """
+    Tool for verifying that model output files are CMIP5-compatible.
 
     Parameters
     ----------
@@ -65,24 +132,12 @@ class VerificationTool(object):
 
     """
     def __init__(self, file):
-        self.file = file
-        self.parts = []
-        self.variable_name = None
+        super(ModelVerificationTool, self).__init__(file)
         self.mip_table = None
         self.model_name = None
         self.experiment = None
         self.ensemble_member = None
         self.temporal_subset = None
-
-    def is_netcdf(self):
-        """
-        Check whether a file is netCDF.
-
-        """
-        try:
-            Dataset(self.file.name)
-        except IOError as e:
-            raise VerificationError(e.message)
 
     def is_netcdf3_data_model(self):
         """
@@ -93,13 +148,6 @@ class VerificationTool(object):
         if not d.data_model in ['NETCDF3_CLASSIC', 'NETCDF4_CLASSIC']:
             msg = 'NetCDF: File must use classic data model'
             raise VerificationError(msg)
-
-    def parse_filename(self):
-        """
-        Break a filename into its component parts.
-
-        """
-        self.parts = self.file.name.split('_')
 
     def filename_has_model_name(self):
         """
@@ -119,7 +167,43 @@ class VerificationTool(object):
         A file that passes all checks is verified.
 
         """
-        self.is_netcdf()
+        super(ModelVerificationTool, self).verify()
         self.is_netcdf3_data_model()
-        self.parse_filename()
         self.filename_has_model_name()
+
+
+class BenchmarkVerificationTool(VerificationTool):
+    """
+    Tool for verifying that benchmark data files are ILAMB-compatible.
+
+    Parameters
+    ----------
+    file : str
+      The name of a file to verify.
+
+    Attributes
+    ----------
+    file : str
+      The name of a file to verify.
+    parts : list
+      Parts of the filename (see Notes below).
+    variable_name : str or None
+      CMIP5 short variable name.
+
+    Notes
+    -----
+    ILAMB benchmark data file names can take two forms:
+
+        filename = <variable name>.nc
+        filename = <variable name>_<lon-resolution>_<lat-resolution>.nc
+
+    The first is for point data, the second for gridded data.
+
+    Examples:
+
+        swe.nc
+        tas_0.5x0.5.nc
+
+    """
+    def __init__(self, file):
+        super(BenchmarkVerificationTool, self).__init__(file)
