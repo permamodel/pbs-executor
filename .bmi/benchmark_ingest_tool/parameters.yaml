@@ -3,7 +3,7 @@ ilamb_root:
     'Path to the ILAMB benchmark data and model output repository (ILAMB_ROOT)'
   value:
     type: string
-    default: /nas/data/ilamb
+    default: /home/csdms/ilamb
 
 dest_dir:
   description:
@@ -18,14 +18,14 @@ link_dir:
     linked (optional)
   value:
     type: string
-    default: ''
+    default: 'DATA-by-project'
 
 study_name:
   description:
     Name of modeling project or study; e.g., CMIP5 (optional)
   value:
     type: string
-    default: ''
+    default: 'PBS'
 
 ingest_files:
   description:
