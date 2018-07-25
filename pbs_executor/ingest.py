@@ -1,5 +1,7 @@
-"""Perform ingest operations in PBS."""
+"""The `ingest` module contains classes for uploading files into the
+PBS.
 
+"""
 import os
 import shutil
 import yaml

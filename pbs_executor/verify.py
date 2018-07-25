@@ -40,7 +40,7 @@ class VerificationTool(object):
     file : str
       The name of a file to verify.
     parts : list
-      Parts of the filename (see Notes below).
+      Parts of the filename (see Notes in subclasses).
     variable_name : str or None
       CMIP5 short variable name.
 
@@ -122,13 +122,18 @@ class ModelVerificationTool(VerificationTool):
 
     Notes
     -----
-    A CMIP5-compatible file name takes the following form:
+    A `CMIP5-compatible file name <https://cmip.llnl.gov/cmip5/output_req.html>`_
+    takes the following form:
 
-        filename = <variable name>_<MIP table>_<model>_<experiment>_<ensemble_member>[_<temporal subset>].nc
+    .. code-block:: bash
+
+        filename = <variable-name>_<MIP-table>_<model>_<experiment>_<ensemble-member>[_<temporal-subset>].nc
 
     An example:
 
-        tas_Amon_HADCM3_ historical_r1i1p1_185001-200512.nc
+    .. code-block:: bash
+
+        tas_Amon_HADCM3_historical_r1i1p1_185001-200512.nc
 
     """
     def __init__(self, file):
@@ -194,12 +199,16 @@ class BenchmarkVerificationTool(VerificationTool):
     -----
     ILAMB benchmark data file names can take two forms:
 
-        filename = <variable name>.nc
-        filename = <variable name>_<lon-resolution>_<lat-resolution>.nc
+    .. code-block:: bash
+
+       filename = <variable-name>.nc
+       filename = <variable-name>_<lon-resolution>_<lat-resolution>.nc
 
     The first is for point data, the second for gridded data.
 
     Examples:
+
+    .. code-block:: bash
 
         swe.nc
         tas_0.5x0.5.nc

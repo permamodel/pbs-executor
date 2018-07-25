@@ -1,5 +1,7 @@
-"""Perform file operations in PBS."""
+"""The `file` module contains classes for working with uploaded model
+output files and benchmark data files in the PBS.
 
+"""
 import markdown
 
 
