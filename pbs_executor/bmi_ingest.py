@@ -1,5 +1,7 @@
-"""Define the Basic Model Interface (BMI) for the PBS ingest tools."""
+"""The `bmi_ingest` module defines the BMI for the PBS ingest
+tools.
 
+"""
 from basic_modeling_interface import Bmi
 from .ingest import ModelIngestTool, BenchmarkIngestTool
 
