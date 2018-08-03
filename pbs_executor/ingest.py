@@ -85,6 +85,8 @@ class IngestTool(object):
         ----------
         ingest_file : IngestFile
           File for which symlink is crated.
+        use_study_name : bool, optional
+          Set to True to append study name to path (default is False).
 
         """
         src = os.path.join(self.ilamb_root, self.dest_dir,
