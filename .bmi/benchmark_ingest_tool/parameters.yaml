@@ -42,3 +42,14 @@ make_public:
     choices:
       - true
       - false
+
+overwrite_files:
+  description:
+    Overwrite existing files? (Note that base ILAMB files can only be
+    modified by an administrator.)
+  value:
+    type: choice
+    default: false
+    choices:
+      - true
+      - false
