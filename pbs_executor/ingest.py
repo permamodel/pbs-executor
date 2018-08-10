@@ -47,6 +47,9 @@ class IngestTool(object):
       List of files to ingest.
     make_public : bool
       Set to True to allow others to see and use ingested files.
+    overwrite_files : bool
+      Set to True to allow users to overwrite uploaded files. Only an
+      administrator can overwrite files distributed with ILAMB.
 
     """
     def __init__(self, ingest_file=None):
@@ -56,6 +59,7 @@ class IngestTool(object):
         self.study_name = ''
         self.ingest_files = []
         self.make_public = True
+        self.overwrite_files = False
 
     def load(self, ingest_file):
         """
@@ -76,6 +80,7 @@ class IngestTool(object):
         for f in cfg['ingest_files']:
             self.ingest_files.append(IngestFile(f))
         self.make_public = cfg['make_public']
+        self.overwrite_files = cfg['overwrite_files']
 
     def symlink(self, ingest_file, use_study_name=False):
         """
