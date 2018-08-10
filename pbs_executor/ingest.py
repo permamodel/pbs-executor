@@ -109,7 +109,8 @@ class IngestTool(object):
         if not os.path.isdir(dst_dir):
             os.makedirs(dst_dir)
         dst = os.path.join(dst_dir, ingest_file.name)
-        os.symlink(src, dst)
+        if not os.path.exists(dst):
+            os.symlink(src, dst)
 
 
 class ModelIngestTool(IngestTool):
