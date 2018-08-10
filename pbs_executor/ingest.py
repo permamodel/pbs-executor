@@ -15,7 +15,7 @@ The file `{1}/{0}` already exists in the PBS data store.
 The file has not been updated.
 '''
 file_protected = '''## File Protected\n
-The file `{1}/{0}` is protected in the PBS data store.
+The file `{}` is protected in the PBS data store.
 The base files provided by ILAMB may only be modified by an administrator.
 The file has not been updated.
 '''
@@ -158,7 +158,7 @@ class ModelIngestTool(IngestTool):
                 try:
                     shutil.move(f.name, target)
                 except IOError:
-                    msg = file_protected.format(f.name, target)
+                    msg = file_protected.format(target)
                     if os.path.exists(f.name):
                         os.remove(f.name)
                 except shutil.Error:
