@@ -151,7 +151,7 @@ class ModelIngestTool(IngestTool):
                 target = target_dir = os.path.join(models_dir, f.data)
                 if not os.path.isdir(target_dir):
                     os.makedirs(target_dir)
-                if self.overwrite:
+                if self.overwrite_files:
                     target = os.path.join(target_dir, f.name)
                 msg = file_moved.format(f.name, target)
                 try:
