@@ -14,6 +14,11 @@ file_exists = '''## File Exists\n
 The file `{1}/{0}` already exists in the PBS data store.
 The file has not been updated.
 '''
+file_protected = '''## File Protected\n
+The file `{1}/{0}` is protected in the PBS data store.
+The base files provided by ILAMB may only be modified by an administrator.
+The file has not been updated.
+'''
 file_moved = '''## File Moved\n
 The file `{}` has been moved to `{}` in the PBS data store.
 '''
@@ -143,14 +148,20 @@ class ModelIngestTool(IngestTool):
         models_dir = os.path.join(self.ilamb_root, self.dest_dir)
         for f in self.ingest_files:
             if f.is_verified:
-                target_dir = os.path.join(models_dir, f.data)
+                target = target_dir = os.path.join(models_dir, f.data)
                 if not os.path.isdir(target_dir):
                     os.makedirs(target_dir)
-                msg = file_moved.format(f.name, target_dir)
+                if self.overwrite:
+                    target = os.path.join(target_dir, f.name)
+                msg = file_moved.format(f.name, target)
                 try:
-                    shutil.move(f.name, target_dir)
+                    shutil.move(f.name, target)
+                except IOError:
+                    msg = file_protected.format(f.name, target)
+                    if os.path.exists(f.name):
+                        os.remove(f.name)
                 except shutil.Error:
-                    msg = file_exists.format(f.name, target_dir)
+                    msg = file_exists.format(f.name, target)
                     if os.path.exists(f.name):
                         os.remove(f.name)
                 else:
