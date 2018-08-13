@@ -21,6 +21,7 @@ def make_files(upload_file):
     cfg['study_name'] = study_name
     cfg['ingest_files'] = [upload_file]
     cfg['make_public'] = True
+    cfg['overwrite_files'] = False
     with open(ingest_file, 'w') as fp:
         yaml.safe_dump(cfg, fp, default_flow_style=False)
 
