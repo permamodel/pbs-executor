@@ -27,6 +27,14 @@ study_name:
     type: string
     default: 'PBS'
 
+group_name:
+  description:
+    "A name under which the uploaded model outputs can be grouped; e.g.,
+    your organization ('CSDMS') or your initials ('MDP') (optional)"
+  value:
+    type: string
+    default: ''
+
 ingest_files:
   description:
     A list of model output files to ingest

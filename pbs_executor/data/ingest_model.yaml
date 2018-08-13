@@ -2,5 +2,6 @@ ilamb_root: /home/csdms/ilamb
 dest_dir: MODELS
 link_dir: MODELS-by-project
 study_name: PBS
+group_name:
 ingest_files: ['sftlf_fx_PBS-test_historical_r9i0p0.nc']
 make_public: True

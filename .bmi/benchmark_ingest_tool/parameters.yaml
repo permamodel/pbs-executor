@@ -22,10 +22,18 @@ link_dir:
 
 study_name:
   description:
-    Name of modeling project or study; e.g., CMIP5 (optional)
+    Name of data source; e.g., FLUXNET (optional)
   value:
     type: string
     default: 'PBS'
+
+group_name:
+  description:
+    "A name under which the uploaded data can be grouped; e.g.,
+    your organization ('CSDMS') or your initials ('MDP') (required)"
+  value:
+    type: string
+    default: ''
 
 ingest_files:
   description:

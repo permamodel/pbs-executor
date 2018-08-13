@@ -2,5 +2,6 @@ ilamb_root: /home/csdms/ilamb
 dest_dir: DATA
 link_dir: DATA-by-project
 study_name: PBS
+group_name: CSDMS
 ingest_files: ['nep.nc']
 make_public: True

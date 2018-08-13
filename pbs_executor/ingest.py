@@ -48,6 +48,9 @@ class IngestTool(object):
       Directory relative to ILAMB_ROOT where ingested files are linked.
     study_name : str, optional
       Name of modeling project or study; e.g., CMIP5, MsTMIP, PBS.
+    group_name : str
+      A name under which uploaded files can be grouped. Required for 
+      grouping uploaded benchmark datasets.
     ingest_files : list
       List of files to ingest.
     make_public : bool
@@ -62,6 +65,7 @@ class IngestTool(object):
         self.dest_dir = ''
         self.link_dir = ''
         self.study_name = ''
+        self.group_name = ''
         self.ingest_files = []
         self.make_public = True
         self.overwrite_files = False
@@ -82,6 +86,7 @@ class IngestTool(object):
         self.dest_dir = cfg['dest_dir']
         self.link_dir = cfg['link_dir']
         self.study_name = cfg['study_name']
+        self.group_name = cfg['group_name']
         for f in cfg['ingest_files']:
             self.ingest_files.append(IngestFile(f))
         self.make_public = cfg['make_public']
