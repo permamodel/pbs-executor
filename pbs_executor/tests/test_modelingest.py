@@ -94,3 +94,20 @@ def test_move_file_exists():
                                             x.study_name, f.name)))
     assert_true(os.path.isfile(log_file))
     assert_true(find_in_file(log_file, 'File Exists'))
+
+
+def test_move_file_exists_overwrite():
+    make_model_files()
+    x = ModelIngestTool()
+    x.load(ingest_file)
+    x.overwrite_files = True
+    # x.verify()  # verify will clobber my simple test file
+    f = x.ingest_files[0]
+    f.is_verified = True
+    f.data = model_name
+    x.move()
+    assert_true(os.path.isfile(os.path.join(models_dir, f.data, f.name)))
+    assert_true(os.path.islink(os.path.join(models_link_dir,
+                                            x.study_name, f.name)))
+    assert_true(os.path.isfile(log_file))
+    assert_false(find_in_file(log_file, 'File Exists'))
