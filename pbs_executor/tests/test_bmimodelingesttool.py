@@ -4,17 +4,17 @@ import os
 import shutil
 from nose.tools import raises, assert_true, assert_equal, assert_is_none
 from pbs_executor.bmi_ingest import BmiModelIngestTool
-from . import (ingest_file, model_file, log_file, tmp_dir,
+from . import (ingest_file, model_file, log_file, models_dir,
                make_model_files)
 
 
 def setup_module():
     make_model_files()
-    os.mkdir(tmp_dir)
+    os.mkdir(models_dir)
 
 
 def teardown_module():
-    shutil.rmtree(tmp_dir)
+    shutil.rmtree(models_dir)
     for f in [ingest_file, model_file, log_file]:
         try:
             os.remove(f)

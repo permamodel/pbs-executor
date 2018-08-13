@@ -4,19 +4,22 @@ import os
 import shutil
 from nose.tools import assert_true, assert_false, assert_equal
 from pbs_executor.ingest import ModelIngestTool
-from . import (ingest_file, model_file, log_file, tmp_dir, link_dir,
-               make_model_files)
+from . import (ingest_file, model_file, log_file, models_dir,
+               models_link_dir, make_model_files)
+
+
+model_name = 'SiBCASA'
 
 
 def setup_module():
     make_model_files()
-    os.mkdir(tmp_dir)
+    os.mkdir(models_dir)
 
 
 def teardown_module():
-    shutil.rmtree(tmp_dir)
-    if os.path.exists(link_dir):
-        shutil.rmtree(link_dir)
+    shutil.rmtree(models_dir)
+    if os.path.exists(models_link_dir):
+        shutil.rmtree(models_link_dir)
     for f in [ingest_file, model_file, log_file]:
         try:
             os.remove(f)
@@ -48,8 +51,8 @@ def test_logger():
 
 def test_set_dest_dir():
     x = ModelIngestTool()
-    x.dest_dir = tmp_dir
-    assert_equal(x.dest_dir, tmp_dir)
+    x.dest_dir = models_dir
+    assert_equal(x.dest_dir, models_dir)
 
 
 def test_verify():
@@ -67,9 +70,9 @@ def test_move_file_new():
     # x.verify()  # verify will clobber my simple test file
     f = x.ingest_files[0]
     f.is_verified = True
-    f.data = 'foo'
+    f.data = model_name
     x.move()
-    assert_true(os.path.isfile(os.path.join(tmp_dir, f.data, f.name)))
+    assert_true(os.path.isfile(os.path.join(models_dir, f.data, f.name)))
     assert_true(os.path.isfile(log_file))
 
 
@@ -80,7 +83,7 @@ def test_move_file_exists():
     # x.verify()  # verify will clobber my simple test file
     f = x.ingest_files[0]
     f.is_verified = True
-    f.data = 'foo'
+    f.data = model_name
     x.move()
-    assert_true(os.path.isfile(os.path.join(tmp_dir, f.data, f.name)))
+    assert_true(os.path.isfile(os.path.join(models_dir, f.data, f.name)))
     assert_true(os.path.isfile(log_file))

@@ -4,19 +4,22 @@ import os
 import shutil
 from nose.tools import assert_true, assert_false, assert_equal
 from pbs_executor.ingest import BenchmarkIngestTool
-from . import (ingest_file, benchmark_file, log_file, tmp_dir,
-               link_dir, make_benchmark_files)
+from . import (ingest_file, benchmark_file, log_file, data_dir,
+               data_link_dir, make_benchmark_files)
+
+
+variable_name = 'lai'
 
 
 def setup_module():
     make_benchmark_files()
-    os.mkdir(tmp_dir)
+    os.mkdir(data_dir)
 
 
 def teardown_module():
-    shutil.rmtree(tmp_dir)
-    if os.path.exists(link_dir):
-        shutil.rmtree(link_dir)
+    shutil.rmtree(data_dir)
+    if os.path.exists(data_link_dir):
+        shutil.rmtree(data_link_dir)
     for f in [ingest_file, benchmark_file, log_file]:
         try:
             os.remove(f)
@@ -48,14 +51,14 @@ def test_logger():
 
 def test_set_dest_dir():
     x = BenchmarkIngestTool()
-    x.dest_dir = tmp_dir
-    assert_equal(x.dest_dir, tmp_dir)
+    x.dest_dir = data_dir
+    assert_equal(x.dest_dir, data_dir)
 
 
 def test_set_link_dir():
     x = BenchmarkIngestTool()
-    x.link_dir = link_dir
-    assert_equal(x.link_dir, link_dir)
+    x.link_dir = data_link_dir
+    assert_equal(x.link_dir, data_link_dir)
 
 
 def test_verify():
@@ -73,13 +76,13 @@ def test_move_file_new():
     # x.verify()  # verify will clobber my simple test file
     f = x.ingest_files[0]
     f.is_verified = True
-    f.data = 'foo'
+    f.data = variable_name
     x.move()
-    assert_true(os.path.isfile(os.path.join(tmp_dir,
+    assert_true(os.path.isfile(os.path.join(data_dir,
                                             f.data,
                                             x.study_name,
                                             f.name)))
-    assert_true(os.path.islink(os.path.join(link_dir,
+    assert_true(os.path.islink(os.path.join(data_link_dir,
                                             x.study_name,
                                             f.name)))
     assert_true(os.path.isfile(log_file))
@@ -92,13 +95,13 @@ def test_move_file_exists():
     # x.verify()  # verify will clobber my simple test file
     f = x.ingest_files[0]
     f.is_verified = True
-    f.data = 'foo'
+    f.data = variable_name
     x.move()
-    assert_true(os.path.isfile(os.path.join(tmp_dir,
+    assert_true(os.path.isfile(os.path.join(data_dir,
                                             f.data,
                                             x.study_name,
                                             f.name)))
-    assert_true(os.path.islink(os.path.join(link_dir,
+    assert_true(os.path.islink(os.path.join(data_link_dir,
                                             x.study_name,
                                             f.name)))
     assert_true(os.path.isfile(log_file))
