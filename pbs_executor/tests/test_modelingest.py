@@ -5,7 +5,7 @@ import shutil
 from nose.tools import assert_true, assert_false, assert_equal
 from pbs_executor.ingest import ModelIngestTool
 from . import (ingest_file, model_file, log_file, models_dir,
-               models_link_dir, make_model_files)
+               models_link_dir, make_model_files, find_in_file)
 
 
 model_name = 'SiBCASA'
@@ -73,9 +73,13 @@ def test_move_file_new():
     f.data = model_name
     x.move()
     assert_true(os.path.isfile(os.path.join(models_dir, f.data, f.name)))
+    assert_true(os.path.islink(os.path.join(models_link_dir,
+                                            x.study_name, f.name)))
     assert_true(os.path.isfile(log_file))
 
 
+# Note that an exception isn't raised, but a message is written to the
+# log file.
 def test_move_file_exists():
     make_model_files()
     x = ModelIngestTool()
@@ -86,4 +90,7 @@ def test_move_file_exists():
     f.data = model_name
     x.move()
     assert_true(os.path.isfile(os.path.join(models_dir, f.data, f.name)))
+    assert_true(os.path.islink(os.path.join(models_link_dir,
+                                            x.study_name, f.name)))
     assert_true(os.path.isfile(log_file))
+    assert_true(find_in_file(log_file, 'File Exists'))
