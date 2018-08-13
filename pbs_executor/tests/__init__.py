@@ -14,6 +14,7 @@ data_dir = 'DATA'
 models_link_dir = 'MODELS-link'
 data_link_dir = 'DATA-link'
 study_name = 'PBS'
+group_name = 'CSDMS'
 
 
 def make_files(upload_file, dest_dir, link_dir):
@@ -22,6 +23,7 @@ def make_files(upload_file, dest_dir, link_dir):
     cfg['dest_dir'] = dest_dir
     cfg['link_dir'] = link_dir
     cfg['study_name'] = study_name
+    cfg['group_name'] = group_name
     cfg['ingest_files'] = [upload_file]
     cfg['make_public'] = True
     cfg['overwrite_files'] = False
