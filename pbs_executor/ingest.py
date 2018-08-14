@@ -213,14 +213,21 @@ class BenchmarkIngestTool(IngestTool):
         data_dir = os.path.join(self.ilamb_root, self.dest_dir)
         for f in self.ingest_files:
             if f.is_verified:
-                target_dir = os.path.join(data_dir, f.data, self.study_name)
+                target = target_dir = os.path.join(data_dir, f.data,
+                                                   self.group_name)
                 if not os.path.isdir(target_dir):
                     os.makedirs(target_dir, mode=0775)
-                msg = file_moved.format(f.name, target_dir)
+                if self.overwrite_files:
+                    target = os.path.join(target_dir, f.name)
+                msg = file_moved.format(f.name, target)
                 try:
-                    shutil.move(f.name, target_dir)
+                    shutil.move(f.name, target)
+                except IOError:
+                    msg = file_protected.format(target)
+                    if os.path.exists(f.name):
+                        os.remove(f.name)
                 except shutil.Error:
-                    msg = file_exists.format(f.name, target_dir)
+                    msg = file_exists.format(f.name, target)
                     if os.path.exists(f.name):
                         os.remove(f.name)
                 else:

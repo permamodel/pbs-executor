@@ -5,7 +5,7 @@ import shutil
 from nose.tools import assert_true, assert_false, assert_equal
 from pbs_executor.ingest import BenchmarkIngestTool
 from . import (ingest_file, benchmark_file, log_file, data_dir,
-               data_link_dir, make_benchmark_files)
+               data_link_dir, make_benchmark_files, find_in_file)
 
 
 variable_name = 'lai'
@@ -80,7 +80,7 @@ def test_move_file_new():
     x.move()
     assert_true(os.path.isfile(os.path.join(data_dir,
                                             f.data,
-                                            x.study_name,
+                                            x.group_name,
                                             f.name)))
     assert_true(os.path.islink(os.path.join(data_link_dir,
                                             x.study_name,
@@ -99,9 +99,31 @@ def test_move_file_exists():
     x.move()
     assert_true(os.path.isfile(os.path.join(data_dir,
                                             f.data,
-                                            x.study_name,
+                                            x.group_name,
                                             f.name)))
     assert_true(os.path.islink(os.path.join(data_link_dir,
                                             x.study_name,
                                             f.name)))
     assert_true(os.path.isfile(log_file))
+    assert_true(find_in_file(log_file, 'File Exists'))
+
+
+def test_move_file_exists_overwrite():
+    make_benchmark_files()
+    x = BenchmarkIngestTool()
+    x.load(ingest_file)
+    x.overwrite_files = True
+    # x.verify()  # verify will clobber my simple test file
+    f = x.ingest_files[0]
+    f.is_verified = True
+    f.data = variable_name
+    x.move()
+    assert_true(os.path.isfile(os.path.join(data_dir,
+                                            f.data,
+                                            x.group_name,
+                                            f.name)))
+    assert_true(os.path.islink(os.path.join(data_link_dir,
+                                            x.study_name,
+                                            f.name)))
+    assert_true(os.path.isfile(log_file))
+    assert_false(find_in_file(log_file, 'File Exists'))
