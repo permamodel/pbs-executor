@@ -202,7 +202,7 @@ class BenchmarkVerificationTool(VerificationTool):
     .. code-block:: bash
 
        filename = <variable-name>.nc
-       filename = <variable-name>_<lon-resolution>_<lat-resolution>.nc
+       filename = <variable-name>_<lon-resolution>x<lat-resolution>.nc
 
     The first is for point data, the second for gridded data.
 
