@@ -27,10 +27,10 @@ project_name:
     type: string
     default: 'PBS'
 
-group_name:
+source_name:
   description:
-    "A name under which the uploaded model outputs can be grouped; e.g.,
-    your organization ('CSDMS') or your initials ('MDP') (optional)"
+    "A name for grouping uploaded model outputs; e.g., your
+    organization ('CSDMS') or your initials ('MDP') (optional)"
   value:
     type: string
     default: ''

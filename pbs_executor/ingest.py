@@ -48,7 +48,7 @@ class IngestTool(object):
       Directory relative to ILAMB_ROOT where ingested files are linked.
     project_name : str, optional
       Name of modeling project or study; e.g., CMIP5, MsTMIP, PBS.
-    group_name : str
+    source_name : str
       A name under which uploaded files can be grouped. Required for 
       grouping uploaded benchmark datasets.
     ingest_files : list
@@ -65,7 +65,7 @@ class IngestTool(object):
         self.dest_dir = ''
         self.link_dir = ''
         self.project_name = ''
-        self.group_name = ''
+        self.source_name = ''
         self.ingest_files = []
         self.make_public = True
         self.overwrite_files = False
@@ -86,14 +86,14 @@ class IngestTool(object):
         self.dest_dir = cfg['dest_dir']
         self.link_dir = cfg['link_dir']
         self.project_name = cfg['project_name']
-        self.group_name = cfg['group_name']
+        self.source_name = cfg['source_name']
         for f in cfg['ingest_files']:
             self.ingest_files.append(IngestFile(f))
         self.make_public = cfg['make_public']
         self.overwrite_files = cfg['overwrite_files']
 
 
-    def symlink(self, src_dir, ingest_file, append_group_name=False):
+    def symlink(self, src_dir, ingest_file, append_source_name=False):
         """
         Symlink a file into the PBS project directory.
 
@@ -103,7 +103,7 @@ class IngestTool(object):
           The directory path that contains the source file to link.
         ingest_file : IngestFile
           File for which symlink is crated.
-        append_group_name : bool, optional
+        append_source_name : bool, optional
           Set to True to append group name to path (default is False).
 
         """
@@ -113,8 +113,8 @@ class IngestTool(object):
         if not os.path.isdir(dst_dir):
             os.makedirs(dst_dir)
         dst_filename = ingest_file.name
-        if append_group_name:
-            dst_filename += '.' + self.group_name
+        if append_source_name:
+            dst_filename += '.' + self.source_name
         dst = os.path.join(dst_dir, dst_filename)
         if os.path.islink(dst):
             os.remove(dst)
@@ -217,7 +217,7 @@ class BenchmarkIngestTool(IngestTool):
         for f in self.ingest_files:
             if f.is_verified:
                 target = target_dir = os.path.join(data_dir, f.data,
-                                                   self.group_name)
+                                                   self.source_name)
                 if not os.path.isdir(target_dir):
                     os.makedirs(target_dir, mode=0775)
                 if self.overwrite_files:
@@ -235,6 +235,6 @@ class BenchmarkIngestTool(IngestTool):
                         os.remove(f.name)
                 else:
                     if len(self.link_dir) > 0:
-                        self.symlink(target_dir, f, append_group_name=True)
+                        self.symlink(target_dir, f, append_source_name=True)
                 finally:
                     self.log.add(msg)

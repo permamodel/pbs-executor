@@ -80,9 +80,9 @@ def test_move_file_new():
     x.move()
     assert_true(os.path.isfile(os.path.join(data_dir,
                                             f.data,
-                                            x.group_name,
+                                            x.source_name,
                                             f.name)))
-    link_name = '{}.{}'.format(f.name, x.group_name)
+    link_name = '{}.{}'.format(f.name, x.source_name)
     assert_true(os.path.islink(os.path.join(data_link_dir,
                                             x.project_name,
                                             link_name)))
@@ -100,9 +100,9 @@ def test_move_file_exists():
     x.move()
     assert_true(os.path.isfile(os.path.join(data_dir,
                                             f.data,
-                                            x.group_name,
+                                            x.source_name,
                                             f.name)))
-    link_name = '{}.{}'.format(f.name, x.group_name)
+    link_name = '{}.{}'.format(f.name, x.source_name)
     assert_true(os.path.islink(os.path.join(data_link_dir,
                                             x.project_name,
                                             link_name)))
@@ -122,9 +122,9 @@ def test_move_file_exists_overwrite():
     x.move()
     assert_true(os.path.isfile(os.path.join(data_dir,
                                             f.data,
-                                            x.group_name,
+                                            x.source_name,
                                             f.name)))
-    link_name = '{}.{}'.format(f.name, x.group_name)
+    link_name = '{}.{}'.format(f.name, x.source_name)
     assert_true(os.path.islink(os.path.join(data_link_dir,
                                             x.project_name,
                                             link_name)))

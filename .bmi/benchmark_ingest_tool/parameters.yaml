@@ -27,10 +27,10 @@ project_name:
     type: string
     default: 'PBS'
 
-group_name:
+source_name:
   description:
-    "A name under which the uploaded data can be grouped; e.g.,
-    your organization ('CSDMS') or your initials ('MDP') (required)"
+    "Name of source for uploaded data; e.g., your group or
+    organization ('CSDMS') or your initials ('MDP') (required)"
   value:
     type: string
     default: ''
