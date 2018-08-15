@@ -2,8 +2,8 @@ author: Mark Piper
 doi:
 email: mark.piper@colorado.edu
 license: Apache-2.0
-url: https://github.com/permamodel/pbs
-version: 0.1
+url: https://permamodel.github.io/pbs
+version: 1.0
 summary:
   The Permafrost Benchmark System (PBS), is a collaboration between
   researchers at NSIDC, WHOI, LANL, and CSDMS, for conducting

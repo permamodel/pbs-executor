@@ -20,12 +20,20 @@ link_dir:
     type: string
     default: 'DATA-by-project'
 
-study_name:
+project_name:
   description:
-    Name of modeling project or study; e.g., CMIP5 (optional)
+    Name of modeling project or study; e.g., PBS (optional)    
   value:
     type: string
     default: 'PBS'
+
+source_name:
+  description:
+    "Name of source for uploaded data; e.g., your group or
+    organization ('CSDMS') or your initials ('MDP') (required)"
+  value:
+    type: string
+    default: ''
 
 ingest_files:
   description:
@@ -39,6 +47,17 @@ make_public:
   value:
     type: choice
     default: true
+    choices:
+      - true
+      - false
+
+overwrite_files:
+  description:
+    Overwrite existing files? (Note that base ILAMB files can only be
+    modified by an administrator.)
+  value:
+    type: choice
+    default: false
     choices:
       - true
       - false
