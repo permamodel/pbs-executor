@@ -20,7 +20,7 @@ link_dir:
     type: string
     default: 'MODELS-by-project'
 
-study_name:
+project_name:
   description:
     Name of modeling project or study; e.g., CMIP5 (optional)
   value:

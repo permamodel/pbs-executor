@@ -20,9 +20,9 @@ link_dir:
     type: string
     default: 'DATA-by-project'
 
-study_name:
+project_name:
   description:
-    Name of data source; e.g., FLUXNET (optional)
+    Name of modeling project or study; e.g., PBS (optional)    
   value:
     type: string
     default: 'PBS'

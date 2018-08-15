@@ -74,7 +74,7 @@ def test_move_file_new():
     x.move()
     assert_true(os.path.isfile(os.path.join(models_dir, f.data, f.name)))
     assert_true(os.path.islink(os.path.join(models_link_dir,
-                                            x.study_name, f.name)))
+                                            x.project_name, f.name)))
     assert_true(os.path.isfile(log_file))
 
 
@@ -91,7 +91,7 @@ def test_move_file_exists():
     x.move()
     assert_true(os.path.isfile(os.path.join(models_dir, f.data, f.name)))
     assert_true(os.path.islink(os.path.join(models_link_dir,
-                                            x.study_name, f.name)))
+                                            x.project_name, f.name)))
     assert_true(os.path.isfile(log_file))
     assert_true(find_in_file(log_file, 'File Exists'))
 
@@ -108,6 +108,6 @@ def test_move_file_exists_overwrite():
     x.move()
     assert_true(os.path.isfile(os.path.join(models_dir, f.data, f.name)))
     assert_true(os.path.islink(os.path.join(models_link_dir,
-                                            x.study_name, f.name)))
+                                            x.project_name, f.name)))
     assert_true(os.path.isfile(log_file))
     assert_false(find_in_file(log_file, 'File Exists'))
