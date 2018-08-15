@@ -92,30 +92,33 @@ class IngestTool(object):
         self.make_public = cfg['make_public']
         self.overwrite_files = cfg['overwrite_files']
 
-    def symlink(self, ingest_file, use_study_name=False):
+
+    def symlink(self, src_dir, ingest_file, append_group_name=False):
         """
         Symlink a file into the PBS project directory.
 
         Parameters
         ----------
+        src_dir : str
+          The directory path that contains the source file to link.
         ingest_file : IngestFile
           File for which symlink is crated.
-        use_study_name : bool, optional
-          Set to True to append study name to path (default is False).
+        append_group_name : bool, optional
+          Set to True to append group name to path (default is False).
 
         """
-        src = os.path.join(self.ilamb_root, self.dest_dir,
-                           ingest_file.data)
-        if use_study_name:
-            src = os.path.join(src, self.study_name)
-        src = os.path.join(src, ingest_file.name)
+        src = os.path.join(src_dir, ingest_file.name)
         dst_dir = os.path.join(self.ilamb_root, self.link_dir,
                                self.study_name)
         if not os.path.isdir(dst_dir):
             os.makedirs(dst_dir)
-        dst = os.path.join(dst_dir, ingest_file.name)
-        if not os.path.exists(dst):
-            os.symlink(src, dst)
+        dst_filename = ingest_file.name
+        if append_group_name:
+            dst_filename += '.' + self.group_name
+        dst = os.path.join(dst_dir, dst_filename)
+        if os.path.islink(dst):
+            os.remove(dst)
+        os.symlink(src, dst)
 
 
 class ModelIngestTool(IngestTool):
@@ -172,7 +175,7 @@ class ModelIngestTool(IngestTool):
                         os.remove(f.name)
                 else:
                     if len(self.link_dir) > 0:
-                        self.symlink(f)
+                        self.symlink(target_dir, f)
                 finally:
                     self.log.add(msg)
 
@@ -232,6 +235,6 @@ class BenchmarkIngestTool(IngestTool):
                         os.remove(f.name)
                 else:
                     if len(self.link_dir) > 0:
-                        self.symlink(f, use_study_name=True)
+                        self.symlink(target_dir, f, append_group_name=True)
                 finally:
                     self.log.add(msg)

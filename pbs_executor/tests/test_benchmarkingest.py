@@ -82,9 +82,10 @@ def test_move_file_new():
                                             f.data,
                                             x.group_name,
                                             f.name)))
+    link_name = '{}.{}'.format(f.name, x.group_name)
     assert_true(os.path.islink(os.path.join(data_link_dir,
                                             x.study_name,
-                                            f.name)))
+                                            link_name)))
     assert_true(os.path.isfile(log_file))
 
 
@@ -101,9 +102,10 @@ def test_move_file_exists():
                                             f.data,
                                             x.group_name,
                                             f.name)))
+    link_name = '{}.{}'.format(f.name, x.group_name)
     assert_true(os.path.islink(os.path.join(data_link_dir,
                                             x.study_name,
-                                            f.name)))
+                                            link_name)))
     assert_true(os.path.isfile(log_file))
     assert_true(find_in_file(log_file, 'File Exists'))
 
@@ -122,8 +124,9 @@ def test_move_file_exists_overwrite():
                                             f.data,
                                             x.group_name,
                                             f.name)))
+    link_name = '{}.{}'.format(f.name, x.group_name)
     assert_true(os.path.islink(os.path.join(data_link_dir,
                                             x.study_name,
-                                            f.name)))
+                                            link_name)))
     assert_true(os.path.isfile(log_file))
     assert_false(find_in_file(log_file, 'File Exists'))
