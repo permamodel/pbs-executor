@@ -4,8 +4,9 @@ import os
 import shutil
 from nose.tools import assert_true, assert_false, assert_equal
 from pbs_executor.ingest import BenchmarkIngestTool
+from pbs_executor.utils import find_in_file
 from . import (ingest_file, benchmark_file, log_file, data_dir,
-               data_link_dir, make_benchmark_files, find_in_file)
+               data_link_dir, make_benchmark_files)
 
 
 variable_name = 'lai'

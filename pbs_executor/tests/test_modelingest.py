@@ -4,8 +4,9 @@ import os
 import shutil
 from nose.tools import assert_true, assert_false, assert_equal
 from pbs_executor.ingest import ModelIngestTool
+from pbs_executor.utils import find_in_file
 from . import (ingest_file, model_file, log_file, models_dir,
-               models_link_dir, make_model_files, find_in_file)
+               models_link_dir, make_model_files)
 
 
 model_name = 'SiBCASA'

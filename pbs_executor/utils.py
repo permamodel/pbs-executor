@@ -3,6 +3,7 @@ throughout the PBS executor.
 
 """
 import os
+import re
 
 
 def makedirs(path, mode=0775):
@@ -22,3 +23,24 @@ def makedirs(path, mode=0775):
     """
     os.makedirs(path)
     os.chmod(path, mode)
+
+
+def find_in_file(filename, search_str):
+    """
+    Determine whether a string is contained in a file.
+
+    Like `grep`.
+
+    Parameters
+    ----------
+    filename : str
+      The path to a file.
+    search_str : str
+      The string to be found in the file.
+
+    """
+    with open(filename, 'r') as fp:
+        for line in fp:
+            if re.search(search_str, line):
+                return True
+    return False
