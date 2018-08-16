@@ -25,7 +25,7 @@ def makedirs(path, mode=0775):
     os.chmod(path, mode)
 
 
-def find_in_file(filename, search_str):
+def is_in_file(filename, search_str):
     """
     Determine whether a string is contained in a file.
 

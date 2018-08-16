@@ -4,7 +4,7 @@ import os
 import shutil
 from nose.tools import assert_true, assert_false, assert_equal
 from pbs_executor.ingest import BenchmarkIngestTool
-from pbs_executor.utils import find_in_file
+from pbs_executor.utils import is_in_file
 from . import (ingest_file, benchmark_file, log_file, data_dir,
                data_link_dir, make_benchmark_files)
 
@@ -108,7 +108,7 @@ def test_move_file_exists():
                                             x.project_name,
                                             link_name)))
     assert_true(os.path.isfile(log_file))
-    assert_true(find_in_file(log_file, 'File Exists'))
+    assert_true(is_in_file(log_file, 'File Exists'))
 
 
 def test_move_file_exists_overwrite():
@@ -130,4 +130,4 @@ def test_move_file_exists_overwrite():
                                             x.project_name,
                                             link_name)))
     assert_true(os.path.isfile(log_file))
-    assert_false(find_in_file(log_file, 'File Exists'))
+    assert_false(is_in_file(log_file, 'File Exists'))
