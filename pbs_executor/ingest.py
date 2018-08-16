@@ -8,6 +8,7 @@ import yaml
 from .file import IngestFile, Logger
 from .verify import (ModelVerificationTool, BenchmarkVerificationTool,
                      VerificationError)
+from .utils import makedirs
 
 
 file_exists = '''## File Exists\n
@@ -111,7 +112,7 @@ class IngestTool(object):
         dst_dir = os.path.join(self.ilamb_root, self.link_dir,
                                self.project_name)
         if not os.path.isdir(dst_dir):
-            os.makedirs(dst_dir)
+            makedirs(dst_dir, mode=0775)
         dst_filename = ingest_file.name
         if append_source_name:
             dst_filename += '.' + self.source_name
@@ -159,7 +160,7 @@ class ModelIngestTool(IngestTool):
             if f.is_verified:
                 target = target_dir = os.path.join(models_dir, f.data)
                 if not os.path.isdir(target_dir):
-                    os.makedirs(target_dir)
+                    makedirs(target_dir, mode=0775)
                 if self.overwrite_files:
                     target = os.path.join(target_dir, f.name)
                 msg = file_moved.format(f.name, target)
@@ -219,7 +220,7 @@ class BenchmarkIngestTool(IngestTool):
                 target = target_dir = os.path.join(data_dir, f.data,
                                                    self.source_name)
                 if not os.path.isdir(target_dir):
-                    os.makedirs(target_dir, mode=0775)
+                    makedirs(target_dir, mode=0775)
                 if self.overwrite_files:
                     target = os.path.join(target_dir, f.name)
                 msg = file_moved.format(f.name, target)

@@ -1,7 +1,6 @@
 """Unit tests for the pbs_executor package."""
 
 import os
-import re
 import yaml
 
 
@@ -41,11 +40,3 @@ def make_benchmark_files():
     with open(benchmark_file, 'w') as fp:
         fp.write('This is a test benchmark data file.\n')
     make_files(benchmark_file, data_dir, data_link_dir)
-
-
-def find_in_file(filename, search_str):
-    with open(filename, 'r') as fp:
-        for line in fp:
-            if re.search(search_str, line):
-                return True
-    return False

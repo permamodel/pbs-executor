@@ -4,11 +4,13 @@ import os
 import shutil
 from nose.tools import assert_true, assert_false, assert_equal
 from pbs_executor.ingest import ModelIngestTool
+from pbs_executor.utils import is_in_file, check_permissions
 from . import (ingest_file, model_file, log_file, models_dir,
-               models_link_dir, make_model_files, find_in_file)
+               models_link_dir, make_model_files)
 
 
 model_name = 'SiBCASA'
+permissions = '775'
 
 
 def setup_module():
@@ -72,7 +74,9 @@ def test_move_file_new():
     f.is_verified = True
     f.data = model_name
     x.move()
-    assert_true(os.path.isfile(os.path.join(models_dir, f.data, f.name)))
+    source_dir = os.path.join(models_dir, f.data)
+    assert_true(os.path.isfile(os.path.join(source_dir, f.name)))
+    assert_true(check_permissions(source_dir, permissions))
     assert_true(os.path.islink(os.path.join(models_link_dir,
                                             x.project_name, f.name)))
     assert_true(os.path.isfile(log_file))
@@ -89,11 +93,13 @@ def test_move_file_exists():
     f.is_verified = True
     f.data = model_name
     x.move()
-    assert_true(os.path.isfile(os.path.join(models_dir, f.data, f.name)))
+    source_dir = os.path.join(models_dir, f.data)
+    assert_true(os.path.isfile(os.path.join(source_dir, f.name)))
+    assert_true(check_permissions(source_dir, permissions))
     assert_true(os.path.islink(os.path.join(models_link_dir,
                                             x.project_name, f.name)))
     assert_true(os.path.isfile(log_file))
-    assert_true(find_in_file(log_file, 'File Exists'))
+    assert_true(is_in_file(log_file, 'File Exists'))
 
 
 def test_move_file_exists_overwrite():
@@ -106,8 +112,10 @@ def test_move_file_exists_overwrite():
     f.is_verified = True
     f.data = model_name
     x.move()
-    assert_true(os.path.isfile(os.path.join(models_dir, f.data, f.name)))
+    source_dir = os.path.join(models_dir, f.data)
+    assert_true(os.path.isfile(os.path.join(source_dir, f.name)))
+    assert_true(check_permissions(source_dir, permissions))
     assert_true(os.path.islink(os.path.join(models_link_dir,
                                             x.project_name, f.name)))
     assert_true(os.path.isfile(log_file))
-    assert_false(find_in_file(log_file, 'File Exists'))
+    assert_false(is_in_file(log_file, 'File Exists'))
