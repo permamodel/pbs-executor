@@ -44,3 +44,21 @@ def is_in_file(filename, search_str):
             if re.search(search_str, line):
                 return True
     return False
+
+
+def check_permissions(path, mode):
+    """
+    Check whether file permissions match a given mode.
+
+    Returns True if the file has the given mode; False otherwise.
+    See https://stackoverflow.com/a/5337329.
+
+    Parameters
+    ----------
+    path : str
+      The path the file to check.
+    mode : str
+      The mode to check against.
+
+    """
+    return oct(os.stat(path).st_mode)[-3:] == mode

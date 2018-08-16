@@ -4,12 +4,13 @@ import os
 import shutil
 from nose.tools import assert_true, assert_false, assert_equal
 from pbs_executor.ingest import BenchmarkIngestTool
-from pbs_executor.utils import is_in_file
+from pbs_executor.utils import is_in_file, check_permissions
 from . import (ingest_file, benchmark_file, log_file, data_dir,
                data_link_dir, make_benchmark_files)
 
 
 variable_name = 'lai'
+permissions = '775'
 
 
 def setup_module():
@@ -79,10 +80,9 @@ def test_move_file_new():
     f.is_verified = True
     f.data = variable_name
     x.move()
-    assert_true(os.path.isfile(os.path.join(data_dir,
-                                            f.data,
-                                            x.source_name,
-                                            f.name)))
+    source_dir = os.path.join(data_dir, f.data, x.source_name)
+    assert_true(os.path.isfile(os.path.join(source_dir, f.name)))
+    assert_true(check_permissions(source_dir, permissions))
     link_name = '{}.{}'.format(f.name, x.source_name)
     assert_true(os.path.islink(os.path.join(data_link_dir,
                                             x.project_name,
@@ -99,10 +99,9 @@ def test_move_file_exists():
     f.is_verified = True
     f.data = variable_name
     x.move()
-    assert_true(os.path.isfile(os.path.join(data_dir,
-                                            f.data,
-                                            x.source_name,
-                                            f.name)))
+    source_dir = os.path.join(data_dir, f.data, x.source_name)
+    assert_true(os.path.isfile(os.path.join(source_dir, f.name)))
+    assert_true(check_permissions(source_dir, permissions))
     link_name = '{}.{}'.format(f.name, x.source_name)
     assert_true(os.path.islink(os.path.join(data_link_dir,
                                             x.project_name,
@@ -121,10 +120,9 @@ def test_move_file_exists_overwrite():
     f.is_verified = True
     f.data = variable_name
     x.move()
-    assert_true(os.path.isfile(os.path.join(data_dir,
-                                            f.data,
-                                            x.source_name,
-                                            f.name)))
+    source_dir = os.path.join(data_dir, f.data, x.source_name)
+    assert_true(os.path.isfile(os.path.join(source_dir, f.name)))
+    assert_true(check_permissions(source_dir, permissions))
     link_name = '{}.{}'.format(f.name, x.source_name)
     assert_true(os.path.islink(os.path.join(data_link_dir,
                                             x.project_name,
