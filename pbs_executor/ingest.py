@@ -154,6 +154,25 @@ class ModelIngestTool(IngestTool):
         """
         Move ingest files to the ILAMB MODELS directory.
 
+        Notes
+        -----
+        The directory structures for an uploaded model output
+        should look like:
+
+        .. code-block:: bash
+
+           MODELS
+            |
+            +-- SiBCASA
+                 |
+                 +-- test_model_output.txt
+
+           MODELS-by-project
+            |
+            +-- PBS
+                 |
+                 +-- test_model_output.txt -> MODELS/SibCASA/test_model_output.txt
+
         """
         models_dir = os.path.join(self.ilamb_root, self.dest_dir)
         for f in self.ingest_files:
@@ -210,8 +229,28 @@ class BenchmarkIngestTool(IngestTool):
                 f.is_verified = True
 
     def move(self):
-        """
-        Move ingest files to the ILAMB DATA directory.
+        """Move ingest files to the ILAMB DATA directory.
+
+        Notes
+        -----
+        The directory structures for an uploaded benchmark dataset
+        should look like:
+
+        .. code-block:: bash
+
+           DATA
+            |
+            +-- lai
+                 |
+                 +-- CSDMS
+                      |
+                      +-- test_benchmark.txt
+
+           DATA-by-project
+            |
+            +-- PBS
+                 |
+                 +-- test_benchmark.txt.CSDMS -> DATA/lai/CSDMS/test_benchmark.txt
 
         """
         data_dir = os.path.join(self.ilamb_root, self.dest_dir)
