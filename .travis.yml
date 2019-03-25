@@ -25,8 +25,7 @@ before_install:
   - hash -r
   - conda config --set always_yes yes --set changeps1 no
   - conda install python=$TRAVIS_PYTHON_VERSION
-  - conda install nose pyyaml netcdf4 markdown
-  - pip install coveralls basic-modeling-interface
+  - conda install nose pyyaml netcdf4 markdown coveralls basic-modeling-interface -c csdms-stack
 
 install:
   - python setup.py install
