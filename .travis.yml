@@ -10,8 +10,6 @@ env:
     - MINICONDA_URL_BASE="https://repo.continuum.io/miniconda/Miniconda2-latest"
     - TRAVIS_PYTHON_VERSION="2.7"
 
-sudo: false
-
 before_install:
   - |
     if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
@@ -24,15 +22,20 @@ before_install:
   - export PATH="$CONDA_PREFIX/bin:$PATH"
   - hash -r
   - conda config --set always_yes yes --set changeps1 no
+  - source activate root
   - conda install python=$TRAVIS_PYTHON_VERSION
-  - conda install nose pyyaml netcdf4 markdown
-  - pip install coveralls basic-modeling-interface
+  - conda install nose pyyaml netcdf4 markdown coveralls basic-modeling-interface -c csdms-stack
 
 install:
   - python setup.py install
 
 script:
-  - nosetests --with-doctest --with-coverage --cover-package=pbs_executor
+  - |
+    if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
+      nosetests --with-coverage --cover-package=pbs_executor
+    else
+      nosetests --with-doctest --with-coverage --cover-package=pbs_executor
+    fi
 
 after_success:
   - coveralls --verbose
