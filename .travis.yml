@@ -30,7 +30,12 @@ install:
   - python setup.py install
 
 script:
-  - nosetests
+  - |
+    if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
+      nosetests --with-coverage --cover-package=pbs_executor
+    else
+      nosetests --with-doctest --with-coverage --cover-package=pbs_executor
+    fi
 
 after_success:
   - coveralls --verbose
