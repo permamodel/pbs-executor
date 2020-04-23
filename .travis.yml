@@ -7,7 +7,7 @@ os:
 env:
   global:
     - CONDA_PREFIX=$HOME/miniconda
-    - MINICONDA_URL_BASE="https://repo.continuum.io/miniconda/Miniconda2-latest"
+    - MINICONDA_URL_BASE="https://repo.anaconda.com/miniconda/Miniconda2-latest"
     - TRAVIS_PYTHON_VERSION="2.7"
 
 before_install:
